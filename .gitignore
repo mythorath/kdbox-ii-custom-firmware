@@ -1,0 +1,16 @@
+# Never commit vendor firmware or extracted images (copyrighted Goldshell code)
+*.ius
+*.cpb
+*.sqsh
+*.squashfs
+*.bin
+*.img
+rootfs/
+unpacked/
+# personal
+authkeys
+*.pem
+id_rsa*
+*_rsa
+*_rsa.pub
+known_hosts
