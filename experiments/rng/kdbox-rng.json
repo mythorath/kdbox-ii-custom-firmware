@@ -1,0 +1,7 @@
+{
+"malgo": "blake2s",
+"text-only": true,
+"skip-security-checks": 100,
+"set": ["intchains_qomo:vfff=65.000000:550:40:64"],
+"pools": [ { "url": "stratum+tcp://SERVER-IP:3333", "user": "rng.worker", "pass": "x" } ]
+}

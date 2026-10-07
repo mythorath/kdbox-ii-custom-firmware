@@ -1,0 +1,15 @@
+Randomness stats for a 28-second RNG run (rng_out.bin, SHA-256-whitened output)
+Hardware: Goldshell KD-Box II, 36 blake2s chips / 3240 cores, 550 MHz
+
+bytes: 254816  (= 7963 hardware nonces x 32B digests)
+unique byte values: 256 / 256
+mean byte: 127.645          (ideal 127.5)
+chi-square: 257.6           (ideal ~255 for df=255; typical pass band ~200-310)
+bit balance: 0.50014 ones   (ideal 0.5)
+Shannon entropy: 7.9993 bits/byte  (ideal 8.0)
+lag-1 serial correlation: -0.00062 (ideal ~0)
+
+Note: these are measured on the SHA-256-whitened output. Clean uniformity is
+partly guaranteed by the hashing and does not by itself prove the raw hardware
+source has high min-entropy. It is a legitimate, fun entropy source, not a
+certified TRNG.

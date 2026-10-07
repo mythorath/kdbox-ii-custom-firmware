@@ -65,6 +65,15 @@ Do not skip step 1.
 
 The stock firmware's online update path is cryptographically signed, so you cannot push a modified image that way. The route this project uses is to get a root shell over the serial console and write the new rootfs directly to the flash partition. That is reliable and fully under your control, but it does require the small driver circuit in [hardware/](hardware/), because the console lines sit behind a level shifter that a plain USB-serial adapter cannot drive. Removing the serial requirement is the main open task. See [docs/feasibility.md](docs/feasibility.md).
 
+## Experiments: control, ASICs, and novel uses
+
+Beyond booting a modified rootfs, the box has been probed for how much of the
+hardware is under our control and what else it can do. Short version: full control of
+the controller peripherals (fans, LEDs, GPIO, I2C, SPI), and the hash engine is 1 chain
+of 36 blake2s chips (3240 cores, ~0.27 GH/s) that only ever does "blake2s nonce search".
+Using a small local stratum server, that was turned into a self-contained hardware
+random number generator (no internet, no coin). See [experiments/](experiments/).
+
 ## Contributing
 
 Issues and pull requests welcome, especially from anyone with the same hardware who can confirm findings or help with the no-serial installer. Please do not attach any Goldshell firmware images or binaries to issues or PRs.
