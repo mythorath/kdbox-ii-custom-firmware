@@ -16,10 +16,11 @@ What works today, verified on real hardware:
 - A reproducible modify -> rebuild -> flash pipeline for the rootfs, validated end to end: a modified image was built, written to the flash chip, and the box rebooted cleanly on it.
 - Permanent root SSH baked into a custom rootfs that survives power cycles.
 - Proof the hardware can mine a different blake2s coin (XVG) with the miner binaries already present on the device.
+- **No-serial install**: a signed firmware package flashed through the box's own web updater, with no case opening, no serial header and no `dd`. See [docs/ota-signed-flash.md](docs/ota-signed-flash.md).
 
 What is still in progress:
 
-- A no-serial installer (an SD card or offline update image) so people who do not want to open the case and solder can install a custom build.
+- Packaging the whole thing as a one-click community build with a shared key (today the no-serial path needs you to sign with the vendor OTA key, see [docs/ota-signed-flash.md](docs/ota-signed-flash.md)).
 - Permanent, auto starting coin conversion as a clean packaged build.
 - Exploring how much direct control of the ASICs is possible and whether they are useful for anything besides mining.
 
@@ -31,8 +32,12 @@ This repo contains **our own tools, scripts, and documentation only**. It does *
 
 ```
 docs/        How the hardware and firmware work, and the step by step procedures
+             • AGENTS.md            brief for AI agents working on a device
+             • ota-signed-flash.md  no-serial install through the web updater
 hardware/    The serial bridge (ESP32 sketch) and a signal test script
 scripts/     Backup, build, and flash scripts (run some on a PC, some on the box)
+             • build-cpb.py         patch + sign + repack an OTA package
+             • flash-ota.sh         upload it and watch the box come back
 helpers/     Convenience wrappers for talking to the box from a Windows PC
 ```
 
@@ -45,7 +50,18 @@ helpers/     Convenience wrappers for talking to the box from a Windows PC
 
 Full detail in [docs/hardware.md](docs/hardware.md).
 
-## Quick start (high level)
+## Two ways in
+
+| | no case opening | needs |
+|---|---|---|
+| **Signed OTA flash** ([docs/ota-signed-flash.md](docs/ota-signed-flash.md)) | ✅ | the vendor signing key + passphrase, your SSH pubkey |
+| **Serial + rootfs swap** ([docs/build-and-flash.md](docs/build-and-flash.md)) | ❌ | a J2 serial bridge ([hardware/](hardware/)) |
+
+The OTA path is the one to try first if the box still runs stock firmware: its updater
+verifies a signature and nothing else, so a package you build and sign installs exactly like
+an official one, in about 3.5 minutes.
+
+## Quick start (high level, serial route)
 
 1. **Back up first.** Open serial, get a root shell, and dump your flash. If anything ever goes wrong, this is what saves you. See [docs/serial-and-root.md](docs/serial-and-root.md) and `scripts/backup-flash.sh`.
 2. **Extract and modify the rootfs** on a PC. See [docs/build-and-flash.md](docs/build-and-flash.md) and `scripts/build-rootfs.sh`.
